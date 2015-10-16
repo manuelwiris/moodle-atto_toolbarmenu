@@ -39,16 +39,21 @@ Y.namespace('M.atto_toolbarmenu').Button = Y.Base.create('button', Y.M.editor_at
         // Text: text shown on toolbar.
         // callbackArgs: callback arguments.
         // callback: callback method for each element. Not mandatory, a global callback can be used.
-        var items = [{text: '', callbackArgs: '', callback: ''}];
+        var items = [{text: 'Italic', callbackArgs: 'italic'}, {text:'Bold', callbackArgs: 'bold'}];
 
         this.addToolbarMenu({
             // Global callback.
             globalItemConfig: {
-                callback: ''
+                callback: this._setStyle
             },
             icon: '',
             items: items
         });
+    },
+
+    _setStyle: function(e, style) {
+        document.execCommand(style, false, null);
+        this.markUpdated();
     }
 });
 
