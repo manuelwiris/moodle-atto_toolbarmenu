@@ -36,40 +36,23 @@ Y.namespace('M.atto_toolbarmenu').Button = Y.Base.create('button', Y.M.editor_at
      initializer: function() {
 
         var items = [];
-
-        Y.Array.each(this._objectToArray(this.get('langs')), function(lang) {
-            items.push({
-                text: lang.value,
-                callbackArgs: lang.key
-            });
+        this.addToolbarMenu({
+            globalItemConfig: {
+                callback: this._setLangTag
+            },
+            icon: 'icon',
+            iconComponent: 'atto_toolbarmenu',
+            items: items
         });
-
-            this.addToolbarMenu({
-                globalItemConfig: {
-                    callback: this._setLangTag
-                },
-                icon: 'icon',
-                iconComponent: 'atto_toolbarmenu',
-                items: items
-            });
-        },
+    },
 
     _setLangTag: function(e, lang) {
         var host = this.get('host');
         if (host === false || host.getSelection()[0].collapsed) {
             return;
         }
-        var langOpenNode = Y.Node.create('<span>' + '{' + lang + '}' + '</span>');
-        var langCloseNode = Y.Node.create('<span>' + '{/' + lang + '}' + '</span>');
-        langOpenNode.addClass = 'langClass';
-        langCloseNode.addClass = 'langClass';
         var parentSelectedNode = Y.Node(host.getSelectionParentNode());
-
-        parentSelectedNode.insert(langOpenNode, 'before');
-        parentSelectedNode.insert(langCloseNode, 'after');
-
-        // Mark the textarea as updated.
-        this.markUpdated();
+        return;
     },
 
     /**
@@ -92,7 +75,7 @@ Y.namespace('M.atto_toolbarmenu').Button = Y.Base.create('button', Y.M.editor_at
 },
     {
     ATTRS: {
-        langs: {
+        xxx: {
             value: {}
         }
     }

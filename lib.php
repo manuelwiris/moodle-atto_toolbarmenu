@@ -24,5 +24,4 @@
 defined('MOODLE_INTERNAL') || die();
 
 function atto_toolbarmenu_params_for_js($elementid, $options, $fpoptions) {
-    return array('langs' => get_string_manager()->get_list_of_translations());
 }
