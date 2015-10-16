@@ -35,20 +35,67 @@
 Y.namespace('M.atto_toolbarmenu').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
      initializer: function() {
 
-        // Array to ToolbarMenu.
-        // Text: text shown on toolbar.
-        // callbackArgs: callback arguments.
-        // callback: callback method for each element. Not mandatory, a global callback can be used.
-        var items = [{text: '', callbackArgs: '', callback: ''}];
+        var items = [];
 
-        this.addToolbarMenu({
-            // Global callback.
-            globalItemConfig: {
-                callback: ''
-            },
-            icon: '',
-            items: items
+        Y.Array.each(this._objectToArray(this.get('langs')), function(lang) {
+            items.push({
+                text: lang.value,
+                callbackArgs: lang.key
+            });
         });
+
+            this.addToolbarMenu({
+                globalItemConfig: {
+                    callback: this._setLangTag
+                },
+                icon: 'icon',
+                iconComponent: 'atto_toolbarmenu',
+                items: items
+            });
+        },
+
+    _setLangTag: function(e, lang) {
+        var host = this.get('host');
+        if (host === false || host.getSelection()[0].collapsed) {
+            return;
+        }
+        var langOpenNode = Y.Node.create('<span>' + '{' + lang + '}' + '</span>');
+        var langCloseNode = Y.Node.create('<span>' + '{/' + lang + '}' + '</span>');
+        langOpenNode.addClass = 'langClass';
+        langCloseNode.addClass = 'langClass';
+        var parentSelectedNode = Y.Node(host.getSelectionParentNode());
+
+        parentSelectedNode.insert(langOpenNode, 'before');
+        parentSelectedNode.insert(langCloseNode, 'after');
+
+        // Mark the textarea as updated.
+        this.markUpdated();
+    },
+
+    /**
+     * Transform a JSON object {key1:value1, key2:value2,..} in an array of object
+     * [{key1:value1}, {key2:value2},.....]
+     * @param  {Object} o {key:value}  object.
+     * @return {Array} [{key:value}] Array
+     */
+    _objectToArray: function(o) {
+        var arrayValues = Y.Object.values(o);
+        var arrayKeys = Y.Object.keys(o);
+        var arrayObject = Array.prototype.map.call(arrayKeys, function(x){
+                var obj = {};
+                 obj.key = x;
+                 obj.value = arrayValues[arrayKeys.indexOf(x)];
+                return obj;}
+        );
+        return arrayObject;
     }
+},
+    {
+    ATTRS: {
+        langs: {
+            value: {}
+        }
+    }
+
 });
 
